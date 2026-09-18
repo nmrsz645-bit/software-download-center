@@ -67,11 +67,16 @@
     </section>
     <footer>下载后请解压完整 ZIP，再双击 <strong>Start-App.cmd</strong> 启动。国内版会从阿里云 OSS 检查更新；更早的 GitHub 更新版请先在此下载一次国内完整包。</footer>
   </main>
-  <script src="https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/latest.js?v=1.1.10"></script>
-  <script src="https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/novel/latest.js?v=1.0.20"></script>
   <script>
     (() => {
       const versionPattern = /^\d+(?:\.\d+){1,3}$/;
+      const ossBaseUrl = 'https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates';
+      const loadManifestScript = (url) => new Promise((resolve) => {
+        const script = document.createElement('script');
+        script.src = `${url}?r=${Date.now()}`;
+        script.onload = script.onerror = resolve;
+        document.head.appendChild(script);
+      });
       const applyDownload = (versionId, downloadId, manifest, label) => {
         const versionNode = document.getElementById(versionId);
         const downloadNode = document.getElementById(downloadId);
@@ -84,19 +89,13 @@
         downloadNode.href = fullPackageUrl;
         downloadNode.textContent = `${label}（v${version}）`;
       };
-      applyDownload('novel-version', 'novel-download', window.NOVEL_PROCESSING_CENTER_LATEST || {}, '国内下载完整包');
-
-      const versionNode = document.getElementById('douyin-version');
-      const downloadNode = document.getElementById('douyin-download');
-      const manifest = window.DOUYIN_WORKS_EXTRACTOR_LATEST || {};
-      const version = String(manifest.version || '').replace(/^v/i, '');
-      const fullPackageUrl = String(manifest.fullPackageUrl || '');
-      if (!versionPattern.test(version) || !/^https:\/\//i.test(fullPackageUrl)) {
-        return;
-      }
-      versionNode.textContent = `当前版本：v${version} · Windows 64 位 · 国内直连`;
-      downloadNode.href = fullPackageUrl;
-      downloadNode.textContent = `国内下载完整包（v${version}）`;
+      const refreshDownloadLinks = async () => {
+        await loadManifestScript(`${ossBaseUrl}/latest.js`);
+        await loadManifestScript(`${ossBaseUrl}/novel/latest.js`);
+        applyDownload('novel-version', 'novel-download', window.NOVEL_PROCESSING_CENTER_LATEST || {}, '国内下载完整包');
+        applyDownload('douyin-version', 'douyin-download', window.DOUYIN_WORKS_EXTRACTOR_LATEST || {}, '国内下载完整包');
+      };
+      void refreshDownloadLinks();
     })();
   </script>
 </body>
