@@ -48,10 +48,10 @@
           <div>
             <h3>小说处理中心</h3>
             <p>本地小说改写与自动配音桌面程序。</p>
-            <div class="meta">当前版本：v1.0.18 · Windows 64 位</div>
+            <div class="meta" id="novel-version" aria-live="polite">当前版本：v1.0.18 · Windows 64 位</div>
           </div>
         </div>
-        <a class="download" href="https://github.com/nmrsz645-bit/gaixiaoshuoXpeiyin/releases/download/v1.0.18/novel-processing-center-1.0.18-windows-x64.zip">下载完整包</a>
+        <a class="download" id="novel-download" href="https://github.com/nmrsz645-bit/gaixiaoshuoXpeiyin/releases/download/v1.0.18/novel-processing-center-1.0.18-windows-x64.zip">下载完整包</a>
       </article>
       <article class="card" style="margin-top:18px">
         <div class="product">
@@ -65,14 +65,29 @@
         <a class="download" id="douyin-download" href="https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/douyin-works-extractor-1.1.10-windows-x64.zip">国内下载完整包</a>
       </article>
     </section>
-    <footer>下载后请解压完整 ZIP，再双击 <strong>Start-App.cmd</strong> 启动。v1.1.10 及之后的版本会从国内更新源检查更新；更早版本请先在此下载一次完整包。</footer>
+    <footer>下载后请解压完整 ZIP，再双击 <strong>Start-App.cmd</strong> 启动。国内版会从阿里云 OSS 检查更新；更早的 GitHub 更新版请先在此下载一次国内完整包。</footer>
   </main>
   <script src="https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/latest.js"></script>
+  <script src="https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/novel/latest.js"></script>
   <script>
     (() => {
+      const versionPattern = /^\d+(?:\.\d+){1,3}$/;
+      const applyDownload = (versionId, downloadId, manifest, label) => {
+        const versionNode = document.getElementById(versionId);
+        const downloadNode = document.getElementById(downloadId);
+        const version = String(manifest.version || '').replace(/^v/i, '');
+        const fullPackageUrl = String(manifest.fullPackageUrl || '');
+        if (!versionPattern.test(version) || !/^https:\/\//i.test(fullPackageUrl)) {
+          return;
+        }
+        versionNode.textContent = `当前版本：v${version} · Windows 64 位 · 国内直连`;
+        downloadNode.href = fullPackageUrl;
+        downloadNode.textContent = `${label}（v${version}）`;
+      };
+      applyDownload('novel-version', 'novel-download', window.NOVEL_PROCESSING_CENTER_LATEST || {}, '国内下载完整包');
+
       const versionNode = document.getElementById('douyin-version');
       const downloadNode = document.getElementById('douyin-download');
-      const versionPattern = /^\d+(?:\.\d+){1,3}$/;
       const manifest = window.DOUYIN_WORKS_EXTRACTOR_LATEST || {};
       const version = String(manifest.version || '').replace(/^v/i, '');
       const fullPackageUrl = String(manifest.fullPackageUrl || '');
