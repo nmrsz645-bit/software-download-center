@@ -70,10 +70,10 @@
           <div>
             <h3>掌心出书自动处理</h3>
             <p>树懒故事会、抖音与 IAP 书籍扫描、标签、飞书写入和投放链接处理桌面程序。</p>
-            <div class="meta" id="zhangxin-version" aria-live="polite">当前版本：v1.0.1 · Windows 64 位 · 国内直连</div>
+            <div class="meta" id="zhangxin-version" aria-live="polite">当前版本：v1.0.2 · Windows 64 位 · 国内直连</div>
           </div>
         </div>
-        <a class="download" id="zhangxin-download" href="https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/zhangxin-book/releases/1.0.1/zhangxin-book-1.0.1-windows-x64.zip">国内下载完整包（v1.0.1）</a>
+        <a class="download" id="zhangxin-download" href="https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/zhangxin-book/releases/1.0.2/zhangxin-book-1.0.2-windows-x64.zip">国内下载完整包（v1.0.2）</a>
       </article>
       <article class="card" style="margin-top:18px">
         <div class="product">
@@ -137,10 +137,12 @@
       const refreshDownloadLinks = async () => {
         await loadManifestScript(`${ossBaseUrl}/latest.js`);
         await loadManifestScript(`${ossBaseUrl}/novel/latest.js`);
+        await loadManifestScript(`${ossBaseUrl}/zhangxin-book/latest.js`);
         await loadManifestScript(`${legacyOssBaseUrl}/shang-chuan-tou-gao-zhong-xin/latest.js`);
         applyDownload('novel-version', 'novel-download', window.NOVEL_PROCESSING_CENTER_LATEST || {}, '国内下载完整包');
         applyDownload('douyin-version', 'douyin-download', window.DOUYIN_WORKS_EXTRACTOR_LATEST || {}, '国内下载完整包');
         applyDownload('shangchuan-version', 'shangchuan-download', window.SHANG_CHUAN_TOU_GAO_ZHONG_XIN_LATEST || {}, '国内下载完整包');
+        applyDownload('zhangxin-version', 'zhangxin-download', window.ZHANGXIN_BOOK_LATEST || {}, '国内下载完整包');
       };
       void refreshDownloadLinks();
     })();
