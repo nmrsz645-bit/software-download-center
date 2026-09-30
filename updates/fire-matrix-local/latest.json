@@ -1,9 +1,9 @@
 {
   "productId": "fire-matrix-local",
-  "version": "1.8.46.1",
-  "url": "https://github.com/nmrsz645-bit/software-download-center/releases/download/fire-matrix-local-v1.8.46.1/fire-matrix-local-1.8.46.1-app.zip",
-  "sha256": "8f738d096b2a08173f3562383a8f1a52be36f4bc89f91aa452b23216f4510984",
-  "fullPackageUrl": "https://github.com/nmrsz645-bit/software-download-center/releases/download/fire-matrix-local-v1.8.46.1/fire-matrix-local-1.8.46.1-windows-x64.zip",
-  "fullPackageSha256": "46b81d4215165aa07614033ec5ddf88c061c7163d52ca6717838979a468b597e",
-  "notes": "新增启动前远程更新入口与腾讯文档填表窗口。"
+  "version": "1.8.46.2",
+  "url": "https://github.com/nmrsz645-bit/software-download-center/releases/download/fire-matrix-local-v1.8.46.2/fire-matrix-local-1.8.46.2-app.zip",
+  "sha256": "deb40226e89ff476f921de7b7e165e53be7f82da812e1effb786563cc60f332b",
+  "fullPackageUrl": "https://github.com/nmrsz645-bit/software-download-center/releases/download/fire-matrix-local-v1.8.46.2/fire-matrix-local-1.8.46.2-windows-x64.zip",
+  "fullPackageSha256": "d7b47bb0cc6a72c29e5b04f7701f6bd2b934da63b23d7c62e90ea30de2f7263e",
+  "notes": "修复启动器更新检查与并发更新保护。"
 }
