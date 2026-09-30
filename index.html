@@ -41,7 +41,7 @@
     <h1>下载你需要的<br>最新软件版本</h1>
     <p class="intro">这里提供骆驼软件的完整安装包。下载后解压整个 ZIP 文件，再按包内说明启动程序。</p>
     <section aria-labelledby="products-title">
-      <div class="list-label"><h2 id="products-title">可下载程序</h2><span class="count">10 个程序</span></div>
+      <div class="list-label"><h2 id="products-title">可下载程序</h2><span class="count">11 个程序</span></div>
       <article class="card">
         <div class="product">
           <div class="icon" aria-hidden="true">✦</div>
@@ -152,8 +152,19 @@
         </div>
         <a class="download" href="https://luotuoruanjiangengx.oss-cn-beijing.aliyuncs.com/packages/qimao-chushu-manager-1.0.0-win-x64.zip">国内下载完整包（v1.0.0）</a>
       </article>
+      <article class="card" style="margin-top:18px">
+        <div class="product">
+          <div class="icon" aria-hidden="true">▦</div>
+          <div>
+            <h3>火花矩阵本地版</h3>
+            <p>多平台账号与发布管理，并提供腾讯文档填表入口。解压完整包后从 Start-App.cmd 启动，后续启动时检查更新。</p>
+            <div class="meta" id="fire-matrix-local-version" aria-live="polite">当前版本：v1.8.46.1 · Windows 64 位 · GitHub 下载</div>
+          </div>
+        </div>
+        <a class="download" id="fire-matrix-local-download" href="https://github.com/nmrsz645-bit/software-download-center/releases/download/fire-matrix-local-v1.8.46.1/fire-matrix-local-1.8.46.1-windows-x64.zip">下载完整包（v1.8.46.1）</a>
+      </article>
     </section>
-    <footer>下载后请解压完整 ZIP，再按包内说明文件启动。国内版下载包托管于阿里云 OSS。</footer>
+    <footer>下载后请解压完整 ZIP，再按包内说明文件启动。多数国内版下载包托管于阿里云 OSS；火花矩阵本地版由 GitHub Releases 提供下载。</footer>
   </main>
   <script>
     (() => {
@@ -190,7 +201,23 @@
         applyDownload('zhangxin-version', 'zhangxin-download', window.ZHANGXIN_BOOK_LATEST || {}, '国内下载完整包');
         applyDownload('novel-monitor-version', 'novel-monitor-download', window.NOVEL_AMOUNT_MONITOR_LATEST || {}, '国内下载完整包');
       };
+      const refreshFireMatrix = async () => {
+        try {
+          const response = await fetch('/updates/fire-matrix-local/latest.json', { cache: 'no-store' });
+          if (!response.ok) return;
+          const manifest = await response.json();
+          const version = String(manifest.version || '');
+          const url = String(manifest.fullPackageUrl || '');
+          if (manifest.productId !== 'fire-matrix-local' || !/^\d+\.\d+\.\d+\.\d+$/.test(version) ||
+              !/^https:\/\/github\.com\/nmrsz645-bit\/software-download-center\/releases\/download\/fire-matrix-local-v/.test(url)) return;
+          document.getElementById('fire-matrix-local-version').textContent = `当前版本：v${version} · Windows 64 位 · GitHub 下载`;
+          const link = document.getElementById('fire-matrix-local-download');
+          link.href = url;
+          link.textContent = `下载完整包（v${version}）`;
+        } catch (_) { /* Keep the verified static link when the manifest cannot load. */ }
+      };
       void refreshDownloadLinks();
+      void refreshFireMatrix();
     })();
   </script>
 </body>
