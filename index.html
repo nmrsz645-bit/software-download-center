@@ -41,7 +41,7 @@
     <h1>下载你需要的<br>最新软件版本</h1>
     <p class="intro">这里提供骆驼软件的完整安装包。下载后解压整个 ZIP 文件，再按包内说明启动程序。</p>
     <section aria-labelledby="products-title">
-      <div class="list-label"><h2 id="products-title">可下载程序</h2><span class="count">7 个程序</span></div>
+      <div class="list-label"><h2 id="products-title">可下载程序</h2><span class="count">10 个程序</span></div>
       <article class="card">
         <div class="product">
           <div class="icon" aria-hidden="true">✦</div>
@@ -63,6 +63,17 @@
           </div>
         </div>
         <a class="download" id="douyin-download" href="https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/douyin-works-extractor-1.1.10-windows-x64.zip">国内下载完整包</a>
+      </article>
+      <article class="card" style="margin-top:18px">
+        <div class="product">
+          <div class="icon" aria-hidden="true">¥</div>
+          <div>
+            <h3>小说平台金额监控</h3>
+            <p>定时统计边锋、七猫和两个点重账号的页面金额，并发送到企业微信群机器人。</p>
+            <div class="meta" id="novel-monitor-version" aria-live="polite">当前版本：v1.0.0 · Windows 64 位 · 国内直连 · 解压后从根目录启动</div>
+          </div>
+        </div>
+        <a class="download" id="novel-monitor-download" href="https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/novel-amount-monitor/releases/1.0.0/novel-amount-monitor-1.0.0-windows-x64.zip">国内下载完整包（v1.0.0）</a>
       </article>
       <article class="card" style="margin-top:18px">
         <div class="product">
@@ -142,7 +153,7 @@
         <a class="download" href="https://luotuoruanjiangengx.oss-cn-beijing.aliyuncs.com/packages/qimao-chushu-manager-1.0.0-win-x64.zip">国内下载完整包（v1.0.0）</a>
       </article>
     </section>
-    <footer>下载后请解压完整 ZIP，再按包内 README 的说明启动。国内版下载包托管于阿里云 OSS。</footer>
+    <footer>下载后请解压完整 ZIP，再按包内说明文件启动。国内版下载包托管于阿里云 OSS。</footer>
   </main>
   <script>
     (() => {
@@ -171,11 +182,13 @@
         await loadManifestScript(`${ossBaseUrl}/latest.js`);
         await loadManifestScript(`${ossBaseUrl}/novel/latest.js`);
         await loadManifestScript(`${ossBaseUrl}/zhangxin-book/latest.js`);
+        await loadManifestScript(`${ossBaseUrl}/novel-amount-monitor/latest.js`);
         await loadManifestScript(`${legacyOssBaseUrl}/shang-chuan-tou-gao-zhong-xin/latest.js`);
         applyDownload('novel-version', 'novel-download', window.NOVEL_PROCESSING_CENTER_LATEST || {}, '国内下载完整包');
         applyDownload('douyin-version', 'douyin-download', window.DOUYIN_WORKS_EXTRACTOR_LATEST || {}, '国内下载完整包');
         applyDownload('shangchuan-version', 'shangchuan-download', window.SHANG_CHUAN_TOU_GAO_ZHONG_XIN_LATEST || {}, '国内下载完整包');
         applyDownload('zhangxin-version', 'zhangxin-download', window.ZHANGXIN_BOOK_LATEST || {}, '国内下载完整包');
+        applyDownload('novel-monitor-version', 'novel-monitor-download', window.NOVEL_AMOUNT_MONITOR_LATEST || {}, '国内下载完整包');
       };
       void refreshDownloadLinks();
     })();
