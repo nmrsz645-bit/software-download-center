@@ -2,8 +2,8 @@
   "productId": "fire-matrix-local",
   "version": "1.8.46.1",
   "url": "https://github.com/nmrsz645-bit/software-download-center/releases/download/fire-matrix-local-v1.8.46.1/fire-matrix-local-1.8.46.1-app.zip",
-  "sha256": "bf2ba6e2f7cec62ef0e8c4a395f1cd45adc826870b3166e056d779ea10aa8d84",
+  "sha256": "8f738d096b2a08173f3562383a8f1a52be36f4bc89f91aa452b23216f4510984",
   "fullPackageUrl": "https://github.com/nmrsz645-bit/software-download-center/releases/download/fire-matrix-local-v1.8.46.1/fire-matrix-local-1.8.46.1-windows-x64.zip",
-  "fullPackageSha256": "929336b5209c22d0e3c3646b450c8d84f9d2c560d669a6fac3024f10425dd829",
+  "fullPackageSha256": "46b81d4215165aa07614033ec5ddf88c061c7163d52ca6717838979a468b597e",
   "notes": "新增启动前远程更新入口与腾讯文档填表窗口。"
 }
