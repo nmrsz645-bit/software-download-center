@@ -1,10 +1,10 @@
 {
     "productId":  "fire-matrix-local",
-    "version":  "1.8.46.4",
-    "url":  "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/fire-matrix-local/releases/1.8.46.4/fire-matrix-local-1.8.46.4-app.zip",
-    "sha256":  "8b04e99d67983c71abff9f404919ea05400d898b530fe1a525eb458ab7d4b15b",
-    "fullPackageUrl":  "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/fire-matrix-local/releases/1.8.46.4/fire-matrix-local-1.8.46.4-windows-x64.zip",
-    "fullPackageSha256":  "eb4e88d0ddd33df9de4d052cd59627dad53343cf273fb5125fe81742b488c71f",
+    "version":  "1.8.46.5",
+    "url":  "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/fire-matrix-local/releases/1.8.46.5/fire-matrix-local-1.8.46.5-app.zip",
+    "sha256":  "bc0ce9b6acb29e98e71a50a49103caf1c118cecb797078d3dca92c240a6f9008",
+    "fullPackageUrl":  "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/fire-matrix-local/releases/1.8.46.5/fire-matrix-local-1.8.46.5-windows-x64.zip",
+    "fullPackageSha256":  "b77db86ed8456829ea90b3e08bae0aa9cc5e9a4ffb05790f8419c28d91c2b110",
     "notes":  "Domestic OSS delivery",
-    "backupFullPackageUrl":  "https://github.com/nmrsz645-bit/software-download-center/releases/download/fire-matrix-local-v1.8.46.4/fire-matrix-local-1.8.46.4-windows-x64.zip"
+    "backupFullPackageUrl":  "https://github.com/nmrsz645-bit/software-download-center/releases/download/fire-matrix-local-v1.8.46.5/fire-matrix-local-1.8.46.5-windows-x64.zip"
 }
