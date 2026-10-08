@@ -102,6 +102,17 @@
       </article>
       <article class="card" style="margin-top:18px">
         <div class="product">
+          <div class="icon" aria-hidden="true">▧</div>
+          <div>
+            <h3>视频号提取</h3>
+            <p>按作者 ID 提取作品，支持日期与时间筛选、暂停/继续、微信作品分享链接和 XLSX 导出。解压完整包后双击根目录 Start-App.vbs；话题提取和视频文件下载暂不可用，作者采集依赖第三方服务额度。</p>
+            <div class="meta" id="wechat-channels-version" aria-live="polite">当前版本：v0.3.1 · Windows 64 位 · 国内直连 · 从根目录 Start-App.vbs 启动</div>
+          </div>
+        </div>
+        <a class="download" id="wechat-channels-download" href="https://luotuoruanjiangengx.oss-cn-beijing.aliyuncs.com/packages/wechat-channels-extractor-desktop/0.3.1/wechat-channels-extractor-0.3.1-windows-x64.zip">国内下载完整包（v0.3.1）</a>
+      </article>
+      <article class="card" style="margin-top:18px">
+        <div class="product">
           <div class="icon" aria-hidden="true">✦</div>
           <div>
             <h3>游戏短视频配文生成器</h3>
@@ -201,9 +212,11 @@
         await loadManifestScript(`${ossBaseUrl}/zhangxin-book/latest.js`);
         await loadManifestScript(`${ossBaseUrl}/novel-amount-monitor/latest.js`);
         await loadManifestScript(`${legacyOssBaseUrl}/shang-chuan-tou-gao-zhong-xin/latest.js`);
+        await loadManifestScript(`${legacyOssBaseUrl}/wechat-channels-extractor-desktop/latest.js`);
         applyDownload('novel-version', 'novel-download', window.NOVEL_PROCESSING_CENTER_LATEST || {}, '国内下载完整包');
         applyDownload('douyin-version', 'douyin-download', window.DOUYIN_WORKS_EXTRACTOR_LATEST || {}, '国内下载完整包');
         applyDownload('shangchuan-version', 'shangchuan-download', window.SHANG_CHUAN_TOU_GAO_ZHONG_XIN_LATEST || {}, '国内下载完整包');
+        applyDownload('wechat-channels-version', 'wechat-channels-download', window.WECHAT_CHANNELS_EXTRACTOR_LATEST || {}, '国内下载完整包');
         applyDownload('zhangxin-version', 'zhangxin-download', window.ZHANGXIN_BOOK_LATEST || {}, '国内下载完整包');
         applyDownload('novel-monitor-version', 'novel-monitor-download', window.NOVEL_AMOUNT_MONITOR_LATEST || {}, '国内下载完整包');
       };
