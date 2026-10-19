@@ -1,10 +1,10 @@
 {
   "productId": "fire-matrix-local",
-  "version": "1.8.46.7",
-  "url": "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/fire-matrix-local/releases/1.8.46.7/fire-matrix-local-1.8.46.7-app.zip",
-  "sha256": "358256c9a7a4e8b59e8ed2e298301d3b92430540646fda03402775bafe7342d2",
-  "fullPackageUrl": "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/fire-matrix-local/releases/1.8.46.7/fire-matrix-local-1.8.46.7-windows-x64.zip",
-  "fullPackageSha256": "a0fabdcc10820fca049ca29ed73c4f6f67db7999124f18e73a31d6c2b2654210",
-  "notes": "修复账号扫码登录时页面跳转偶发中断。",
-  "backupFullPackageUrl": "https://github.com/nmrsz645-bit/software-download-center/releases/download/fire-matrix-local-v1.8.46.7/fire-matrix-local-1.8.46.7-windows-x64.zip"
+  "version": "1.8.46.8",
+  "url": "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/fire-matrix-local/releases/1.8.46.8/fire-matrix-local-1.8.46.8-app.zip",
+  "sha256": "6625585fbe53fe19d9d851d4e08e663e61461e160491eae48dc1725f44e1ac8c",
+  "fullPackageUrl": "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/fire-matrix-local/releases/1.8.46.8/fire-matrix-local-1.8.46.8-windows-x64.zip",
+  "fullPackageSha256": "83a59a84d69a6ad613f3f67711f0a73eedad5ae68366ddb4852d75115f964e75",
+  "notes": "修复填表遇到主程序暂停时批量跳过账号；暂停期间填表会明确停止。",
+  "backupFullPackageUrl": "https://github.com/nmrsz645-bit/software-download-center/releases/download/fire-matrix-local-v1.8.46.8/fire-matrix-local-1.8.46.8-windows-x64.zip"
 }
