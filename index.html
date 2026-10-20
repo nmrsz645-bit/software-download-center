@@ -44,7 +44,7 @@
     <h1>下载你需要的<br>最新软件版本</h1>
     <p class="intro">这里提供骆驼软件的完整安装包。下载后解压整个 ZIP 文件，再按包内说明启动程序。</p>
     <section aria-labelledby="products-title">
-      <div class="list-label"><h2 id="products-title">可下载程序</h2><span class="count">13 个程序</span></div>
+      <div class="list-label"><h2 id="products-title">可下载程序</h2><span class="count">14 个程序</span></div>
       <article class="card">
         <div class="product">
           <div class="icon" aria-hidden="true">✦</div>
@@ -144,6 +144,17 @@
           </div>
         </div>
         <a class="download" id="heiyan-download" href="https://luotuoruanjiangengx.oss-cn-beijing.aliyuncs.com/packages/heiyan-book/0.1.22/heiyan-book-0.1.22-windows-x64.zip">国内下载完整包（v0.1.22）</a>
+      </article>
+      <article class="card" style="margin-top:18px">
+        <div class="product">
+          <div class="icon" aria-hidden="true">知</div>
+          <div>
+            <h3>知乎出书</h3>
+            <p>知乎内容库当天新书扫描、正文预览保存、标签生成、飞书填表与 IAP 推广链接处理，支持按 ID 或书名批量处理及自动补办。标签整格不超过 55 字，末尾固定 #热门小说。每台电脑需自行登录、配置飞书及模型接口；接口调用会产生费用。完整解压后从根目录 Start-App.cmd 启动，可选择立即更新或稍后；0.1.10 及更早版本首次须手动下载新完整包。</p>
+            <div class="meta" id="zhihu-version" aria-live="polite">当前版本：v0.1.11 · Windows 64 位 · 国内直连 · 从根目录 Start-App.cmd 启动</div>
+          </div>
+        </div>
+        <a class="download" id="zhihu-download" href="https://luotuoruanjiangengx.oss-cn-beijing.aliyuncs.com/packages/zhihu-book/0.1.11/zhihu-book-0.1.11-windows-x64.zip">国内下载完整包（v0.1.11）</a>
       </article>
       <article class="card" style="margin-top:18px">
         <div class="product">
@@ -256,6 +267,26 @@
       };
       void refreshDownloadLinks();
       void refreshFireMatrix();
+    })();
+  </script>
+  <script id="zhihu-release-manifest">
+    (() => {
+      const applyZhihu = () => {
+        const manifest = window.ZHIHU_BOOK_LATEST || {};
+        const version = String(manifest.version || '');
+        const expected = `https://luotuoruanjiangengx.oss-cn-beijing.aliyuncs.com/packages/zhihu-book/${version}/zhihu-book-${version}-windows-x64.zip`;
+        if (manifest.productId !== 'zhihu-book' || !/^\d+\.\d+\.\d+$/.test(version) ||
+            !/^[a-f0-9]{64}$/i.test(String(manifest.sha256 || '')) || manifest.fullPackageUrl !== expected) return;
+        document.getElementById('zhihu-version').textContent = `当前版本：v${version} · Windows 64 位 · 国内直连 · 从根目录 Start-App.cmd 启动`;
+        const download = document.getElementById('zhihu-download');
+        download.href = expected;
+        download.textContent = `国内下载完整包（v${version}）`;
+      };
+      const script = document.createElement('script');
+      script.src = 'https://luotuoruanjiangengx.oss-cn-beijing.aliyuncs.com/updates/zhihu-book/latest.js';
+      script.onload = applyZhihu;
+      script.onerror = () => {}; // Preserve the verified static download when unavailable.
+      document.head.appendChild(script);
     })();
   </script>
 </body>
