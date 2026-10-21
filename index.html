@@ -44,7 +44,7 @@
     <h1>下载你需要的<br>最新软件版本</h1>
     <p class="intro">这里提供骆驼软件的完整安装包。下载后解压整个 ZIP 文件，再按包内说明启动程序。</p>
     <section aria-labelledby="products-title">
-      <div class="list-label"><h2 id="products-title">可下载程序</h2><span class="count">14 个程序</span></div>
+      <div class="list-label"><h2 id="products-title">可下载程序</h2><span class="count">15 个程序</span></div>
       <article class="card">
         <div class="product">
           <div class="icon" aria-hidden="true">✦</div>
@@ -203,6 +203,18 @@
           <a class="backup" id="fire-matrix-local-backup" href="https://github.com/nmrsz645-bit/software-download-center/releases/download/fire-matrix-local-v1.8.46.9/fire-matrix-local-1.8.46.9-windows-x64.zip">GitHub 备用下载</a>
         </div>
       </article>
+
+      <article class="card" style="margin-top:18px">
+        <div class="product">
+          <div class="icon" aria-hidden="true">表</div>
+          <div>
+            <h3>dnf对表工具</h3>
+            <p>以抖音为主表，核对快手、B站和可选的视频号分发信息。支持拖入 Excel 表格、清理标题话题、同名账号邻近核对及零匹配提示，未匹配作品追加到底部。解压完整包后从根目录 Start-App.cmd 启动并检查更新。</p>
+            <div class="meta" id="dnf-table-version" aria-live="polite">当前版本：v1.2.0 · Windows 64 位 · 国内直连 · 从根目录 Start-App.cmd 启动</div>
+          </div>
+        </div>
+        <a class="download" id="dnf-table-download" href="https://luotuoruanjiangengx.oss-cn-beijing.aliyuncs.com/packages/dnf-table-tool/1.2.0/dnf-table-tool-1.2.0-windows-x64.zip">国内下载完整包（v1.2.0）</a>
+      </article>
     </section>
     <footer>下载后请解压完整 ZIP，再按包内说明文件启动。国内下载包托管于阿里云 OSS；部分程序另有 GitHub 备用链接。</footer>
   </main>
@@ -285,6 +297,26 @@
       const script = document.createElement('script');
       script.src = 'https://luotuoruanjiangengx.oss-cn-beijing.aliyuncs.com/updates/zhihu-book/latest.js';
       script.onload = applyZhihu;
+      script.onerror = () => {}; // Preserve the verified static download when unavailable.
+      document.head.appendChild(script);
+    })();
+  </script>
+  <script id="dnf-table-release-manifest">
+    (() => {
+      const applyDnfTable = () => {
+        const manifest = window.DNF_TABLE_TOOL_LATEST || {};
+        const version = String(manifest.version || '');
+        const expected = `https://luotuoruanjiangengx.oss-cn-beijing.aliyuncs.com/packages/dnf-table-tool/${version}/dnf-table-tool-${version}-windows-x64.zip`;
+        if (manifest.productId !== 'dnf-table-tool' || !/^\d+\.\d+\.\d+$/.test(version) ||
+            !/^[a-f0-9]{64}$/i.test(String(manifest.sha256 || '')) || manifest.fullPackageUrl !== expected) return;
+        document.getElementById('dnf-table-version').textContent = `当前版本：v${version} · Windows 64 位 · 国内直连 · 从根目录 Start-App.cmd 启动`;
+        const download = document.getElementById('dnf-table-download');
+        download.href = expected;
+        download.textContent = `国内下载完整包（v${version}）`;
+      };
+      const script = document.createElement('script');
+      script.src = 'https://luotuoruanjiangengx.oss-cn-beijing.aliyuncs.com/updates/dnf-table-tool/latest.js';
+      script.onload = applyDnfTable;
       script.onerror = () => {}; // Preserve the verified static download when unavailable.
       document.head.appendChild(script);
     })();
