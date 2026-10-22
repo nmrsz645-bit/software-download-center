@@ -1,10 +1,10 @@
 {
   "productId": "fire-matrix-local",
-  "version": "1.8.46.9",
-  "url": "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/fire-matrix-local/releases/1.8.46.9/fire-matrix-local-1.8.46.9-app.zip",
-  "sha256": "a8e6148fc6136b1cc6740d4b5b99a3e664650642d2da065cb612012780e1182d",
-  "fullPackageUrl": "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/fire-matrix-local/releases/1.8.46.9/fire-matrix-local-1.8.46.9-windows-x64.zip",
-  "fullPackageSha256": "00bcead51da58204ee6d36b2f71b43d42ec6ff95dff40944fb09cf00d1fe1494",
-  "notes": "开始填表后逐账号核实并补齐缺失行；暂停或账号异常时保留待处理行。",
-  "backupFullPackageUrl": "https://github.com/nmrsz645-bit/software-download-center/releases/download/fire-matrix-local-v1.8.46.9/fire-matrix-local-1.8.46.9-windows-x64.zip"
+  "version": "1.8.46.11",
+  "url": "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/fire-matrix-local/releases/1.8.46.11/fire-matrix-local-1.8.46.11-app.zip",
+  "sha256": "d06dad7cf9e95d3a60a947bf8af5725f7af85d72e452d65e952c6712c6c60fb4",
+  "fullPackageUrl": "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/fire-matrix-local/releases/1.8.46.11/fire-matrix-local-1.8.46.11-windows-x64.zip",
+  "fullPackageSha256": "98edf5edc3dfd05719404db59c642e5138bfdad59c4a3be8535cde10f0090e3b",
+  "notes": "填表优先抖音，按表格待填账号逐个核实后写入；未决写入保留人工核实记录。",
+  "backupFullPackageUrl": "https://github.com/nmrsz645-bit/software-download-center/releases/download/fire-matrix-local-v1.8.46.11/fire-matrix-local-1.8.46.11-windows-x64.zip"
 }
