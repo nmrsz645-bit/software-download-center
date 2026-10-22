@@ -1,10 +1,10 @@
 {
   "productId": "fire-matrix-local",
-  "version": "1.8.46.11",
-  "url": "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/fire-matrix-local/releases/1.8.46.11/fire-matrix-local-1.8.46.11-app.zip",
-  "sha256": "d06dad7cf9e95d3a60a947bf8af5725f7af85d72e452d65e952c6712c6c60fb4",
-  "fullPackageUrl": "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/fire-matrix-local/releases/1.8.46.11/fire-matrix-local-1.8.46.11-windows-x64.zip",
-  "fullPackageSha256": "98edf5edc3dfd05719404db59c642e5138bfdad59c4a3be8535cde10f0090e3b",
-  "notes": "填表优先抖音，按表格待填账号逐个核实后写入；未决写入保留人工核实记录。",
-  "backupFullPackageUrl": "https://github.com/nmrsz645-bit/software-download-center/releases/download/fire-matrix-local-v1.8.46.11/fire-matrix-local-1.8.46.11-windows-x64.zip"
+  "version": "1.8.46.18",
+  "url": "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/fire-matrix-local/releases/1.8.46.18/fire-matrix-local-1.8.46.18-app.zip",
+  "sha256": "22c88199a2a3c4025664a5f2ced0009275193d03edd674a26b766c97f22d08f0",
+  "fullPackageUrl": "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/fire-matrix-local/releases/1.8.46.18/fire-matrix-local-1.8.46.18-windows-x64.zip",
+  "fullPackageSha256": "d53af08be8de9b438da531b1fcf27a0ad30741610a6046bcbeb6e513f8cf5fa0",
+  "notes": "修复哔哩哔哩已发布作品筛选与截图填表；包含逐账号填表、抖音优先和搜索等待修复。",
+  "backupFullPackageUrl": "https://github.com/nmrsz645-bit/software-download-center/releases/download/fire-matrix-local-v1.8.46.18/fire-matrix-local-1.8.46.18-windows-x64.zip"
 }
