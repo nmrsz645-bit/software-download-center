@@ -32,13 +32,14 @@ git status --short
 本指南所在的 `docs-cross-pc-handoff` 分支仅用于文档：
 
 ```powershell
-git fetch origin main docs-cross-pc-handoff
+git fetch origin
 git switch docs-cross-pc-handoff
-git rebase origin/main
+git pull --ff-only origin docs-cross-pc-handoff
+git merge --no-edit origin/main
 git push origin docs-cross-pc-handoff
 ```
 
-不要强推。若远端 HEAD 已变化，先 `git fetch`，阅读差异并正常整合；不要覆盖他人的站点或清单修改。未经单独授权，不把文档分支合入 `main`，不改 Pages 设置。
+不要强推。若 `git pull --ff-only` 或 `git merge` 提示冲突，停止并先核对变更；不要用 rebase 后强推、覆盖他人的站点或清单修改。未经单独授权，不把文档分支合入 `main`，不改 Pages 设置。
 
 ### 站点文件职责
 
@@ -50,6 +51,55 @@ git push origin docs-cross-pc-handoff
 | `updates/fire-matrix-local/site-latest.json` | 火花矩阵网站卡片读取的站内 JSON | 不与应用更新清单混用 |
 
 网页加载失败或运行时清单不符合页面校验时，页面会保留 `index.html` 中的静态下载链接。这是兜底，不是新版本已发布的证明。
+
+### 仅在明确获批发布网页时：实际操作与 Git 回滚
+
+本节是下一次已获批修改网页时的操作串，**本指南发布时没有执行**。它只适用于网站仓库内的 `index.html` 或 `updates/fire-matrix-local/site-latest.json`；产品 OSS 清单仍按该产品的发布规则处理。
+
+```powershell
+# 1. 更新 main 并记录可恢复提交；不要在带有未提交改动的目录执行。
+git switch main
+git fetch origin main
+git pull --ff-only origin main
+$before = git rev-parse HEAD
+git log -1 --oneline
+
+# 2. 只改本次获批的一个位置：
+#    - 静态/运行时卡片：index.html
+#    - 火花矩阵站内卡片数据：updates/fire-matrix-local/site-latest.json
+#    不改 CNAME，不改无关产品，也不把产品客户端 latest.json 当站内 JSON。
+git diff --check
+git diff -- index.html updates/fire-matrix-local/site-latest.json
+
+# 3. 暂存清单必须只含获批文件，再普通提交并推送 Pages 来源 main。
+git add -- index.html                 # 或：git add -- updates/fire-matrix-local/site-latest.json
+git diff --cached --check
+git diff --cached --name-only
+git commit -m "更新 <产品> 下载站信息"
+git push origin main
+
+# 4. 等待并查询 GitHub Pages 构建，再读回自定义域名页面。
+gh api repos/nmrsz645-bit/software-download-center/pages/builds/latest --jq '{status,commit,created_at,updated_at}'
+$url = 'https://download.luotuoqiluotuozhaoma.com/?verify=' + [guid]::NewGuid().ToString('N')
+$page = Invoke-WebRequest -UseBasicParsing -Uri $url
+$page.StatusCode
+$page.Content
+```
+
+第 4 步中，构建的 `commit` 必须是刚推送的网站提交或其包含该提交的后续 `main` 提交；页面 HTML 中必须仍有正确的产品名称、版本文字和完整包 URL。浏览器端动态 `latest.js` / JSON 的结果还要用页面实际加载后的链接再次下载校验。
+
+若网站提交本身有误，先保留 `$before` 和错误提交 SHA，使用正常历史回滚而不是强推：
+
+```powershell
+git switch main
+git fetch origin main
+git pull --ff-only origin main
+git revert <错误的网站提交SHA>
+git push origin main
+gh api repos/nmrsz645-bit/software-download-center/pages/builds/latest --jq '{status,commit}'
+```
+
+`git revert` 只能回滚本仓库中的网页文件；它不会回滚 OSS 中的产品 ZIP 或客户端清单。若外部运行时对象也已错误更新，按本指南的产品专属 OSS 回滚步骤恢复上一个已验证对象，并分别读回。
 
 <a id="catalog"></a>
 
@@ -66,16 +116,30 @@ git push origin docs-cross-pc-handoff
 - 火花矩阵的同仓库 `updates/fire-matrix-local/site-latest.json`；
 - 知乎出书和 DNF 对表工具各自的内联加载/字段校验逻辑。
 
-因此，更新网页前先在 `index.html` 找到该产品的卡片 `id` 和加载器，确认它属于下列哪一种：
+### 已核对的 bucket、卡片与运行时对象
 
-| 机制 | 已核对的例子 | 页面要求 |
-| --- | --- | --- |
-| 外部 `latest.js` | 根 `updates/latest.js`、`updates/novel/latest.js`、`updates/zhangxin-book/latest.js`、`updates/novel-amount-monitor/latest.js`，以及旧 OSS 下的部分产品路径 | 脚本须定义页面实际读取的 `window.*_LATEST` 对象；页面至少要求有效版本和 HTTPS 完整包 URL |
-| 站内 JSON | `updates/fire-matrix-local/site-latest.json` | 页面校验 `productId`、四段版本号、64 位 SHA-256、国内完整包 URL 和 GitHub 备用包 URL 的固定格式 |
-| 内联专属加载器 | 知乎出书、DNF 对表工具 | 页面会校验 `productId`、三段版本号、SHA-256 和由版本推导出的完整包 URL |
-| 静态卡片 | 没有对应加载器的卡片 | 需要在 `index.html` 同时更新显示版本、下载链接和文字；不要假设会自动刷新 |
+当前网页实际使用两个公开 OSS 域名：
 
-`latest.js` 只服务网页展示时，通常含 `version` 与 `fullPackageUrl`，有些对象另含 `fullPackageSha256`。它不是所有产品客户端更新器都读取的清单。客户端通常读取产品专属 JSON，字段、旧版兼容 URL、包布局和是否需用户确认均由该产品决定。
+- 国内下载 bucket：`https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/`（bucket 名 `luotuoqiluotuozhaoma-download`）；
+- 历史兼容 bucket：`https://luotuoruanjiangengx.oss-cn-beijing.aliyuncs.com/`（bucket 名 `luotuoruanjiangengx`）。
+
+下表来自当前 `index.html`。`卡片 id` 为空表示该卡片当前没有可由脚本安全刷新的 id；此类卡片只能在获批后编辑静态 HTML。`window` 为空表示页面当前不从外部 JS 刷新该卡片。
+
+| 公开卡片 | 卡片 id（版本 / 下载） | 页面读取的对象或 JSON | 当前读取路径与来源 |
+| --- | --- | --- | --- |
+| 小说处理中心 | `novel-version` / `novel-download` | `window.NOVEL_PROCESSING_CENTER_LATEST` | 国内下载 bucket：`updates/novel/latest.js` |
+| 抖音作品提取 | `douyin-version` / `douyin-download` | `window.DOUYIN_WORKS_EXTRACTOR_LATEST` | 国内下载 bucket：`updates/latest.js` |
+| 小说平台金额监控 | `novel-monitor-version` / `novel-monitor-download` | `window.NOVEL_AMOUNT_MONITOR_LATEST` | 国内下载 bucket：`updates/novel-amount-monitor/latest.js` |
+| 哔哩哔哩视频提取、快手视频提取、游戏短视频配文生成器、点重出书、七猫出书管理器 | 无运行时 id | 无 | 静态 `index.html` 卡片和完整包链接 |
+| 视频号提取 | `wechat-channels-version` / `wechat-channels-download` | `window.WECHAT_CHANNELS_EXTRACTOR_LATEST` | 历史兼容 bucket：`updates/wechat-channels-extractor-desktop/latest.js` |
+| 掌心出书自动处理 | `zhangxin-version` / `zhangxin-download` | `window.ZHANGXIN_BOOK_LATEST` | 国内下载 bucket：`updates/zhangxin-book/latest.js` |
+| 黑岩出书 | `heiyan-version` / `heiyan-download` | `window.HEIYAN_BOOK_LATEST` | 历史兼容 bucket：`updates/heiyan-book/latest.js` |
+| 知乎出书 | `zhihu-version` / `zhihu-download` | `window.ZHIHU_BOOK_LATEST` | 历史兼容 bucket：`updates/zhihu-book/latest.js`；内联脚本还校验对象字段和完整包 URL 模式 |
+| 上传 + 投稿中心 | `shangchuan-version` / `shangchuan-download` | `window.SHANG_CHUAN_TOU_GAO_ZHONG_XIN_LATEST` | 历史兼容 bucket：`updates/shang-chuan-tou-gao-zhong-xin/latest.js` |
+| 火花矩阵本地版 | `fire-matrix-local-version` / `fire-matrix-local-download` | JSON | 同仓库相对路径：`/updates/fire-matrix-local/site-latest.json`；页面还校验 GitHub 备用包 URL |
+| DNF 对表工具 | `dnf-table-version` / `dnf-table-download` | `window.DNF_TABLE_TOOL_LATEST` | 历史兼容 bucket：`updates/dnf-table-tool/latest.js`；内联脚本还校验对象字段和完整包 URL 模式 |
+
+外部 `latest.js` 的对象通常含 `version` 与 `fullPackageUrl`，有些对象另含 `fullPackageSha256`。这些字段不是所有产品客户端更新器都读取的清单。客户端通常读取产品专属 JSON，字段、旧版兼容 URL、包布局和是否需用户确认均由该产品决定。
 
 ### 修改网站卡片的最小核对
 
@@ -113,6 +177,30 @@ git push origin docs-cross-pc-handoff
 | `Prepare-DomesticRelease.ps1`、产品内构建脚本 | 部分产品的本地组包/清单准备 | 参数、输出和是否触网不一致；先阅读该项目文档和脚本 `--help`/源码，不要按名称推断功能 |
 
 若产品没有已验证上传脚本，采用手工上传：由获授权的 OSS 操作者先上传新版本的完整 ZIP 与更新 ZIP，公网回下载验哈希，最后才上传该产品的客户端清单和适用的网站元数据。不要在未确认 bucket、prefix、兼容地址、缓存策略和回滚入口时执行手工上传。
+
+### 没有统一上传脚本时：OSS 控制台手工步骤
+
+以下是可由新电脑操作员执行的控制台步骤；它不替代产品自己的包校验、清单字段和旧版兼容验收。
+
+1. 从已通过产品测试的发布目录取得完整 ZIP、可选 app-only ZIP、候选客户端清单和网站元数据；记录每个文件的字节数、SHA-256、目标 HTTPS URL 与上一个已验证对象 URL。不要从用户安装目录取包。
+2. 根据候选对象 URL 的 host 选择 bucket：host 为 `luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com` 时选择 `luotuoqiluotuozhaoma-download`；host 为 `luotuoruanjiangengx.oss-cn-beijing.aliyuncs.com` 时选择 `luotuoruanjiangengx`。在 OSS 控制台选择北京地域的对应 bucket，进入**文件管理 / Object 管理**，打开 URL pathname 对应的目录。
+3. 对象 key 不是猜测的文件名：它等于该候选 HTTPS URL 中 host 之后的完整路径，去掉第一个 `/`。例如 URL 的 pathname 为 `/updates/example/releases/1.2.3/example-1.2.3-windows-x64.zip`，目标 key 就是 `updates/example/releases/1.2.3/example-1.2.3-windows-x64.zip`。实际 key 必须以该产品已经生成的候选清单/发布说明为准。
+4. 在控制台点击**上传文件**，选择完整 ZIP（以及该产品明确需要的 app-only ZIP），把目标目录设为第 3 步的不可变版本目录。不要覆盖旧版本 key、不要上传 `latest.json` / `latest.js`、不要上传用户数据。上传后在对象详情中核对文件名和字节数。
+5. 从公网 HTTPS 下载每个新 ZIP 到独立验证目录，计算 SHA-256，并与候选清单比对；任一不符立即停止，不切换任何清单。
+
+```powershell
+$url = '<候选完整ZIP的HTTPS URL>'
+$expected = '<候选记录的64位SHA-256>'
+$verifyDir = 'C:\ReleaseVerify\<产品>-<版本>'   # 必须是新建隔离目录
+New-Item -ItemType Directory -Force -Path $verifyDir | Out-Null
+$downloaded = Join-Path $verifyDir 'downloaded-full.zip'
+Invoke-WebRequest -UseBasicParsing -Uri $url -OutFile $downloaded
+(Get-FileHash -LiteralPath $downloaded -Algorithm SHA256).Hash
+# 只在输出与 $expected 完全一致时继续。
+```
+
+6. 只有 ZIP 回读全部一致后，按产品文档规定的顺序上传其客户端 JSON / `latest.js` 与网站元数据。保留旧清单的原始内容、ETag/下载副本和旧包 URL，确保可恢复。旧客户端可能读取固定兼容地址；不能只改新版路径。
+7. 若需要网页展示，再按本节前面的 Pages 操作串改相应静态卡片、运行时 JS 或站内 `site-latest.json`，推送 `main` 后读取自定义域名页面并复验下载。每次只处理一个产品，分别记录 OSS、客户端和网页结果。
 
 <a id="verify-rollback"></a>
 
