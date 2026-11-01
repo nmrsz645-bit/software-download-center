@@ -44,7 +44,7 @@
     <h1>下载你需要的<br>最新软件版本</h1>
     <p class="intro">这里提供骆驼软件的完整安装包。下载后解压整个 ZIP 文件，再按包内说明启动程序。</p>
     <section aria-labelledby="products-title">
-      <div class="list-label"><h2 id="products-title">可下载程序</h2><span class="count">15 个程序</span></div>
+      <div class="list-label"><h2 id="products-title">可下载程序</h2><span class="count">16 个程序</span></div>
       <article class="card">
         <div class="product">
           <div class="icon" aria-hidden="true">✦</div>
@@ -215,6 +215,17 @@
         </div>
         <a class="download" id="dnf-table-download" href="https://luotuoruanjiangengx.oss-cn-beijing.aliyuncs.com/packages/dnf-table-tool/1.2.0/dnf-table-tool-1.2.0-windows-x64.zip">国内下载完整包（v1.2.0）</a>
       </article>
+      <article class="card" style="margin-top:18px">
+        <div class="product">
+          <div class="icon" aria-hidden="true">▣</div>
+          <div>
+            <h3>视频包装</h3>
+            <p>批量生成带封面、文字、音乐和贴纸的竖屏视频，支持左上角标题拖动。需要支持 NVENC 的 NVIDIA 显卡。完整解压后从 Start-App.cmd 启动，可选择更新；旧 v25 首次需按包内说明手动迁移并保留配置与数据。开始监控前请确认路径及成功后删除来源的设置。</p>
+            <div class="meta" id="video-packager-version" aria-live="polite">当前版本：v1.0.26 · Windows 64 位 · 国内直连</div>
+          </div>
+        </div>
+        <a class="download" id="video-packager-download" href="https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/video-packager/releases/1.0.26/video-packager-1.0.26-windows-x64.zip">国内下载完整包（v1.0.26）</a>
+      </article>
     </section>
     <footer>下载后请解压完整 ZIP，再按包内说明文件启动。国内下载包托管于阿里云 OSS；部分程序另有 GitHub 备用链接。</footer>
   </main>
@@ -318,6 +329,25 @@
       script.src = 'https://luotuoruanjiangengx.oss-cn-beijing.aliyuncs.com/updates/dnf-table-tool/latest.js';
       script.onload = applyDnfTable;
       script.onerror = () => {}; // Preserve the verified static download when unavailable.
+      document.head.appendChild(script);
+    })();
+  </script>
+  <script id="video-packager-release-manifest">
+    (() => {
+      const script = document.createElement('script');
+      script.src = `https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/video-packager/latest.js?r=${Date.now()}`;
+      script.onload = () => {
+        const manifest = window.VIDEO_PACKAGER_LATEST || {};
+        const version = String(manifest.version || '');
+        const expected = `https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/video-packager/releases/${version}/video-packager-${version}-windows-x64.zip`;
+        if (manifest.productId !== 'video-packager' || !/^\d+\.\d+\.\d+$/.test(version) ||
+            !/^[a-f0-9]{64}$/i.test(String(manifest.fullPackageSha256 || '')) || manifest.fullPackageUrl !== expected) return;
+        document.getElementById('video-packager-version').textContent = `当前版本：v${version} · Windows 64 位 · 国内直连`;
+        const link = document.getElementById('video-packager-download');
+        link.href = expected;
+        link.textContent = `国内下载完整包（v${version}）`;
+      };
+      script.onerror = () => {};
       document.head.appendChild(script);
     })();
   </script>
