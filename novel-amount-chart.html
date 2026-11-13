@@ -15,6 +15,12 @@
     h1 { margin: 0; font-size: clamp(23px, 5vw, 33px); }
     .subtitle { margin: 8px 0 22px; color: #52677b; line-height: 1.6; }
     .panel { background: white; border: 1px solid #dfe8f0; border-radius: 18px; padding: 18px; margin-bottom: 16px; box-shadow: 0 8px 24px #1839590c; }
+    .panel h2 { margin: 0 0 12px; font-size: 20px; }
+    .month-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+    .month-card { border: 1px solid #dce8f1; background: #f8fbfd; border-radius: 14px; padding: 15px; }
+    .month-card strong { display: block; margin: 10px 0 6px; font-size: 24px; color: #17496c; font-variant-numeric: tabular-nums; }
+    .month-card small { display: block; color: #60788b; line-height: 1.6; }
+    .month-note { color: #60788b; font-size: 13px; line-height: 1.6; margin: 12px 0 0; }
     .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
     .legend button { border: 1px solid #c8d7e5; border-radius: 999px; background: #f7fafc; color: #26445f; padding: 8px 13px; font: inherit; cursor: pointer; }
     .legend button[aria-pressed="true"] { background: #17496c; border-color: #17496c; color: white; }
@@ -39,6 +45,11 @@
     <p id="range" class="subtitle">正在读取曲线…</p>
     <div id="error" role="alert"></div>
     <section id="content" hidden>
+      <div id="monthly-panel" class="panel" hidden>
+        <h2>月度合计金额</h2>
+        <div id="months" class="month-grid"></div>
+        <p class="month-note">按自然月累加每天最后一次四平台均成功的合计。缺少完整合计的日期不会按 0 元计算；本月统计截至链接生成当天。</p>
+      </div>
       <div class="panel">
         <div id="legend" class="legend" aria-label="选择曲线"></div>
         <p class="hint">在曲线上左右滑动，点选圆点查看当天金额。缺失日期留空。</p>
@@ -81,6 +92,13 @@
         for (const row of data.rows) {
           if (!Array.isArray(row) || row.length !== 5 || row.some(value => value !== null && (typeof value !== "string" || !/^\d+(?:\.\d{1,2})?$/.test(value)))) throw new Error("曲线数据格式无效。");
         }
+        if (data.months !== undefined) {
+          if (!Array.isArray(data.months) || data.months.length > 3 || data.months.some(month =>
+            !Array.isArray(month) || month.length !== 4 || !/^\d{4}-(0[1-9]|1[0-2])$/.test(month[0]) ||
+            (month[1] !== null && (typeof month[1] !== "string" || !/^\d+(?:\.\d{1,2})?$/.test(month[1]))) ||
+            !Number.isInteger(month[2]) || !Number.isInteger(month[3]) || month[2] < 0 || month[3] < 1 || month[3] > 31 || month[2] > month[3] ||
+            (month[1] === null) !== (month[2] === 0))) throw new Error("月度数据格式无效。");
+        }
         return data;
       }
       function dateAt(end, index) {
@@ -94,6 +112,22 @@
         const unit = data.unit || "元";
         byId("range").textContent = `${dates[0]} 至 ${dates[29]} · 北京时间 · 每日最后一次成功金额`;
         byId("content").hidden = false;
+        if (data.months && data.months.length) {
+          byId("monthly-panel").hidden = false;
+          const monthGrid = byId("months");
+          for (const [month, amount, counted, expected] of [...data.months].reverse()) {
+            const card = document.createElement("div");
+            card.className = "month-card";
+            const title = document.createElement("div");
+            title.textContent = `${month.slice(0, 4)}年${Number(month.slice(5))}月${month === data.end.slice(0, 7) ? " · 本月截至" + data.end.slice(5) : ""}`;
+            const value = document.createElement("strong");
+            value.textContent = amount === null ? "暂无完整日期数据" : `${Number(amount).toLocaleString("zh-CN", {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${unit}`;
+            const status = document.createElement("small");
+            status.textContent = `已统计 ${counted}/${expected} 天${expected > counted ? " · 缺少 " + (expected - counted) + " 天" : " · 无缺失"}`;
+            card.append(title, value, status);
+            monthGrid.appendChild(card);
+          }
+        }
         const table = byId("rows");
         for (let index = 29; index >= 0; index--) {
           const tr = document.createElement("tr");
