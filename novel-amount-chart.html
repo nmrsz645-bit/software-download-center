@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+  <title>小说业务 · 近30日金额曲线</title>
+  <style>
+    :root { color-scheme: light; font-family: "Microsoft YaHei UI", system-ui, sans-serif; color: #17283b; background: #f2f6fa; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    main { max-width: 1000px; margin: auto; padding: 22px 14px 40px; }
+    h1 { margin: 0; font-size: clamp(23px, 5vw, 33px); }
+    .subtitle { margin: 8px 0 22px; color: #52677b; line-height: 1.6; }
+    .panel { background: white; border: 1px solid #dfe8f0; border-radius: 18px; padding: 18px; margin-bottom: 16px; box-shadow: 0 8px 24px #1839590c; }
+    .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    .legend button { border: 1px solid #c8d7e5; border-radius: 999px; background: #f7fafc; color: #26445f; padding: 8px 13px; font: inherit; cursor: pointer; }
+    .legend button[aria-pressed="true"] { background: #17496c; border-color: #17496c; color: white; }
+    .hint { color: #65798b; font-size: 13px; margin: 0 0 10px; }
+    #chart-wrap { overflow-x: auto; overflow-y: hidden; border: 1px solid #e1e9ef; border-radius: 12px; background: #fcfeff; touch-action: pan-x; }
+    #chart { display: block; height: 320px; }
+    #selected { min-height: 25px; margin-top: 12px; font-weight: 700; }
+    #table-wrap { overflow-x: auto; max-height: 520px; overflow-y: auto; }
+    table { border-collapse: collapse; width: 100%; min-width: 700px; font-variant-numeric: tabular-nums; }
+    th, td { border-bottom: 1px solid #e7edf2; padding: 11px 9px; text-align: right; white-space: nowrap; }
+    th:first-child, td:first-child { text-align: left; position: sticky; left: 0; background: white; }
+    thead th { position: sticky; top: 0; background: #f7fafc; z-index: 1; }
+    thead th:first-child { z-index: 2; background: #f7fafc; }
+    .empty { color: #8192a0; }
+    #error { display: none; border: 1px solid #d7a8a8; background: #fff4f3; color: #822a2a; border-radius: 12px; padding: 18px; }
+    footer { color: #65798b; font-size: 13px; line-height: 1.7; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>小说业务 · 近30日金额曲线</h1>
+    <p id="range" class="subtitle">正在读取曲线…</p>
+    <div id="error" role="alert"></div>
+    <section id="content" hidden>
+      <div class="panel">
+        <div id="legend" class="legend" aria-label="选择曲线"></div>
+        <p class="hint">在曲线上左右滑动，点选圆点查看当天金额。缺失日期留空。</p>
+        <div id="chart-wrap" tabindex="0" aria-label="可左右滑动的每日金额曲线"><svg id="chart" role="img" aria-label="近30日金额曲线"></svg></div>
+        <div id="selected" aria-live="polite"></div>
+      </div>
+      <div class="panel">
+        <h2>每日明细</h2>
+        <div id="table-wrap"><table><thead><tr><th>日期</th><th>点重艺影画境</th><th>点重欣娱</th><th>七猫平台</th><th>边锋平台</th><th>合计金额</th></tr></thead><tbody id="rows"></tbody></table></div>
+      </div>
+      <footer>各平台取当天最后一次成功抓取；合计取当天最后一次四项均成功的记录。合计与各平台数值的取样时间可能不同。未抓取或抓取失败的日期显示“—”，不会按零计算。金额数据仅位于本链接的 # 后，网页服务器不接收这段数据；持有链接者可查看。</footer>
+    </section>
+  </main>
+  <script>
+    (() => {
+      "use strict";
+      const labels = ["点重艺影画境", "点重欣娱", "七猫平台", "边锋平台", "合计金额"];
+      const colors = ["#ea6b45", "#ac62cb", "#2585ba", "#2d9d79", "#17496c"];
+      const svgNS = "http://www.w3.org/2000/svg";
+      const byId = id => document.getElementById(id);
+      const addSvg = (tag, attributes, parent) => {
+        const element = document.createElementNS(svgNS, tag);
+        for (const [key, value] of Object.entries(attributes)) element.setAttribute(key, String(value));
+        parent.appendChild(element);
+        return element;
+      };
+      function fail(message) {
+        byId("range").textContent = "无法显示曲线";
+        byId("error").textContent = message;
+        byId("error").style.display = "block";
+      }
+      function readPayload() {
+        const fragment = location.hash.slice(1);
+        if (!fragment.startsWith("v1=") || fragment.length > 10000) throw new Error("链接缺少有效的曲线数据。");
+        const encoded = fragment.slice(3);
+        if (!/^[A-Za-z0-9_-]+$/.test(encoded)) throw new Error("曲线数据格式无效。");
+        const bytes = Uint8Array.from(atob(encoded.replace(/-/g, "+").replace(/_/g, "/") + "===".slice((encoded.length + 3) % 4)), c => c.charCodeAt(0));
+        const data = JSON.parse(new TextDecoder().decode(bytes));
+        if (data.v !== 1 || !/^\d{4}-\d{2}-\d{2}$/.test(data.end) || !Array.isArray(data.rows) || data.rows.length !== 30 || typeof data.unit !== "string" || data.unit.length > 12) throw new Error("曲线数据格式无效。");
+        for (const row of data.rows) {
+          if (!Array.isArray(row) || row.length !== 5 || row.some(value => value !== null && (typeof value !== "string" || !/^\d+(?:\.\d{1,2})?$/.test(value)))) throw new Error("曲线数据格式无效。");
+        }
+        return data;
+      }
+      function dateAt(end, index) {
+        const day = new Date(end + "T12:00:00Z");
+        if (Number.isNaN(day.valueOf())) throw new Error("日期无效。");
+        day.setUTCDate(day.getUTCDate() - 29 + index);
+        return day.toISOString().slice(0, 10);
+      }
+      function show(data) {
+        const dates = data.rows.map((_, i) => dateAt(data.end, i));
+        const unit = data.unit || "元";
+        byId("range").textContent = `${dates[0]} 至 ${dates[29]} · 北京时间 · 每日最后一次成功金额`;
+        byId("content").hidden = false;
+        const table = byId("rows");
+        for (let index = 29; index >= 0; index--) {
+          const tr = document.createElement("tr");
+          const dateCell = document.createElement("td");
+          dateCell.textContent = dates[index];
+          tr.appendChild(dateCell);
+          for (const value of data.rows[index]) {
+            const td = document.createElement("td");
+            td.textContent = value === null ? "—" : `${Number(value).toLocaleString("zh-CN", {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${unit}`;
+            if (value === null) td.className = "empty";
+            tr.appendChild(td);
+          }
+          table.appendChild(tr);
+        }
+        let selected = 4;
+        const legend = byId("legend");
+        const buttons = labels.map((label, index) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.textContent = label;
+          button.addEventListener("click", () => { selected = index; draw(); });
+          legend.appendChild(button);
+          return button;
+        });
+        function draw() {
+          buttons.forEach((button, index) => button.setAttribute("aria-pressed", index === selected ? "true" : "false"));
+          const svg = byId("chart");
+          svg.replaceChildren();
+          const width = 30 * 68 + 70, height = 320, top = 24, bottom = 267, left = 58;
+          svg.setAttribute("width", width);
+          svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+          svg.setAttribute("aria-label", `${labels[selected]}近30日金额曲线`);
+          const values = data.rows.map(row => row[selected] === null ? null : Number(row[selected]));
+          const max = Math.max(1, ...values.filter(value => value !== null));
+          for (let step = 0; step <= 4; step++) {
+            const y = bottom - (bottom - top) * step / 4;
+            addSvg("line", {x1: left, y1: y, x2: width - 15, y2: y, stroke: "#e3ebf1"}, svg);
+            const tick = addSvg("text", {x: left - 7, y: y + 4, "text-anchor": "end", fill: "#667d8e", "font-size": 11}, svg);
+            tick.textContent = (max * step / 4).toFixed(0);
+          }
+          let path = "";
+          let segmentOpen = false;
+          values.forEach((value, index) => {
+            const x = left + index * 68;
+            const dateText = addSvg("text", {x, y: 292, "text-anchor": "middle", fill: "#617789", "font-size": 12}, svg);
+            dateText.textContent = dates[index].slice(5);
+            if (value === null) { segmentOpen = false; return; }
+            const y = bottom - (value / max) * (bottom - top);
+            path += `${segmentOpen ? " L" : " M"}${x} ${y}`;
+            segmentOpen = true;
+          });
+          addSvg("path", {d: path, fill: "none", stroke: colors[selected], "stroke-width": 3, "stroke-linecap": "round", "stroke-linejoin": "round"}, svg);
+          values.forEach((value, index) => {
+            if (value === null) return;
+            const x = left + index * 68, y = bottom - (value / max) * (bottom - top);
+            const dot = addSvg("circle", {cx: x, cy: y, r: 7, fill: colors[selected], stroke: "white", "stroke-width": 2, tabindex: 0, role: "button", "aria-label": `${dates[index]} ${labels[selected]} ${value.toFixed(2)} ${unit}`}, svg);
+            const select = () => { byId("selected").textContent = `${dates[index]} · ${labels[selected]}：${value.toLocaleString("zh-CN", {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${unit}`; };
+            dot.addEventListener("click", select);
+            dot.addEventListener("keydown", event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); select(); } });
+          });
+          byId("selected").textContent = values.every(value => value === null) ? `${labels[selected]}：近30日暂无有效记录` : `已选择${labels[selected]}；点击曲线上的圆点查看金额。`;
+          byId("chart-wrap").scrollLeft = byId("chart-wrap").scrollWidth;
+        }
+        draw();
+      }
+      try { show(readPayload()); } catch (error) { fail(error.message || "无法读取曲线数据。"); }
+    })();
+  </script>
+</body>
+</html>
