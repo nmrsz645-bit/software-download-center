@@ -44,7 +44,7 @@
     <h1>下载你需要的<br>最新软件版本</h1>
     <p class="intro">这里提供骆驼软件的 Windows 下载。ZIP 文件请完整解压后再启动。EXE 文件可按对应程序的说明使用。</p>
     <section aria-labelledby="products-title">
-      <div class="list-label"><h2 id="products-title">可下载程序</h2><span class="count">17 个程序</span></div>
+      <div class="list-label"><h2 id="products-title">可下载程序</h2><span class="count">18 个程序</span></div>
       <article class="card">
         <div class="product">
           <div class="icon" aria-hidden="true">✦</div>
@@ -169,6 +169,17 @@
           </div>
         </div>
         <a class="download" id="zhihu-download" href="https://luotuoruanjiangengx.oss-cn-beijing.aliyuncs.com/packages/zhihu-book/0.1.21/zhihu-book-0.1.21-windows-x64.zip">国内下载完整包（v0.1.21）</a>
+      </article>
+      <article class="card" id="ailive-independent" style="margin-top:18px">
+        <div class="product">
+          <div class="icon" aria-hidden="true">播</div>
+          <div>
+            <h3>直播回复助手</h3>
+            <p>读取快手直播伴侣的弹幕、礼物和进房消息并语音播报。电脑须配备支持 AVX 的 x64 处理器，使用 CPU 即可运行。首次请完整解压，再双击 Start-App.cmd；有新版时可在启动时选择更新。</p>
+            <div class="meta" id="ailive-independent-version" aria-live="polite">当前版本：v1.0.9 · Windows 10 22H2 / 11 x64 · 国内直连</div>
+          </div>
+        </div>
+        <a class="download" id="ailive-independent-download" href="https://luotuoruanjiangengx.oss-cn-beijing.aliyuncs.com/packages/ailive-independent/1.0.9/ailive-independent-1.0.9-windows-x64.zip">国内下载完整包（v1.0.9）</a>
       </article>
       <article class="card" style="margin-top:18px">
         <div class="product">
@@ -323,6 +334,25 @@
       script.src = 'https://luotuoruanjiangengx.oss-cn-beijing.aliyuncs.com/updates/zhihu-book/latest.js';
       script.onload = applyZhihu;
       script.onerror = () => {}; // Preserve the verified static download when unavailable.
+      document.head.appendChild(script);
+    })();
+  </script>
+  <script id="ailive-independent-release-manifest">
+    (() => {
+      const applyLiveAssistant = () => {
+        const manifest = window.AILIVE_INDEPENDENT_LATEST || {};
+        const version = String(manifest.version || '');
+        const expected = `https://luotuoruanjiangengx.oss-cn-beijing.aliyuncs.com/packages/ailive-independent/${version}/ailive-independent-${version}-windows-x64.zip`;
+        if (manifest.productId !== 'ailive-independent' || !/^\d+\.\d+\.\d+$/.test(version) ||
+            !/^[a-f0-9]{64}$/i.test(String(manifest.sha256 || '')) || manifest.fullPackageUrl !== expected) return;
+        document.getElementById('ailive-independent-version').textContent = `当前版本：v${version} · Windows 10 22H2 / 11 x64 · 国内直连`;
+        const download = document.getElementById('ailive-independent-download');
+        download.href = expected;
+        download.textContent = `国内下载完整包（v${version}）`;
+      };
+      const script = document.createElement('script');
+      script.src = 'https://luotuoruanjiangengx.oss-cn-beijing.aliyuncs.com/updates/ailive-independent/latest.js';
+      script.onload = applyLiveAssistant;
       document.head.appendChild(script);
     })();
   </script>
