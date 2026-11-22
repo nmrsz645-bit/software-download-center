@@ -1,0 +1,10 @@
+{
+  "productId": "laxin-huohua",
+  "version": "1.0.0.0",
+  "url": "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/laxin-huohua/releases/1.0.0.0/laxin-huohua-1.0.0.0-app.zip",
+  "sha256": "c06aa0c477708caaf89091d8cc4cc808fa9f0c4bcf2179f19a682af871b67213",
+  "fullPackageUrl": "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/laxin-huohua/releases/1.0.0.0/laxin-huohua-1.0.0.0-windows-x64.zip",
+  "fullPackageSha256": "4ed2b3e31e97dae5c8cdc0d50b7d166c77e4cfadad850d6d5e0d2a2a00571de1",
+  "notes": "首版支持微博新视频监控、1080p 文件核验、按账号设置每日发布上限，以及评论中的迅雷、UC 和夸克网盘链接处理。",
+  "backupFullPackageUrl": "https://github.com/nmrsz645-bit/software-download-center/releases/download/laxin-huohua-v1.0.0.0/laxin-huohua-1.0.0.0-windows-x64.zip"
+}

@@ -170,6 +170,19 @@
         </div>
         <a class="download" id="zhihu-download" href="https://luotuoruanjiangengx.oss-cn-beijing.aliyuncs.com/packages/zhihu-book/0.1.22/zhihu-book-0.1.22-windows-x64.zip">国内下载完整包（v0.1.22）</a>
       </article>
+      <article class="card" id="laxin-huohua" style="margin-top:18px">
+        <div class="product">
+          <div class="icon" aria-hidden="true">火</div>
+          <div>
+            <h3>拉新火花</h3>
+            <p>监控微博博主的新视频，核对文件达到 1080p 后上传。可为各发布账号设置每日发布上限，并处理评论中的迅雷、UC 和夸克网盘链接。完整解压后从根目录 Start-App.cmd 启动，首次使用需登录自己的平台账号。</p>
+            <div class="meta" id="laxin-huohua-version" aria-live="polite">当前版本：v1.0.0.0 · Windows 64 位 · 国内直连 · 从根目录 Start-App.cmd 启动</div>
+          </div>
+        </div>
+        <div class="download-actions">
+          <a class="download" id="laxin-huohua-download" href="https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/laxin-huohua/releases/1.0.0.0/laxin-huohua-1.0.0.0-windows-x64.zip">国内下载完整包（v1.0.0.0）</a>
+        </div>
+      </article>
       <article class="card" id="guantuiguang" style="margin-top:18px">
         <div class="product">
           <div class="icon" aria-hidden="true">关</div>
@@ -352,6 +365,33 @@
       script.onload = applyZhihu;
       script.onerror = () => {}; // Preserve the verified static download when unavailable.
       document.head.appendChild(script);
+    })();
+  </script>
+  <script id="laxin-huohua-release-manifest">
+    (async () => {
+      try {
+        const response = await fetch('./updates/laxin-huohua/site-latest.json', { cache: 'no-store' });
+        if (!response.ok) return;
+        const manifest = await response.json();
+        const version = String(manifest.version || '');
+        if (manifest.productId !== 'laxin-huohua' || !/^\d+\.\d+\.\d+\.\d+$/.test(version) ||
+            !/^[a-f0-9]{64}$/i.test(String(manifest.fullPackageSha256 || ''))) return;
+        const filename = `laxin-huohua-${version}-windows-x64.zip`;
+        const domestic = `https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/laxin-huohua/releases/${version}/${filename}`;
+        if (manifest.fullPackageUrl !== domestic) return;
+        document.getElementById('laxin-huohua-version').textContent = `当前版本：v${version} · Windows 64 位 · 国内直连 · 从根目录 Start-App.cmd 启动`;
+        const download = document.getElementById('laxin-huohua-download');
+        download.href = domestic;
+        download.textContent = `国内下载完整包（v${version}）`;
+        const backup = `https://github.com/nmrsz645-bit/software-download-center/releases/download/laxin-huohua-v${version}/${filename}`;
+        if (manifest.backupFullPackageUrl === backup) {
+          const link = document.createElement('a');
+          link.className = 'backup';
+          link.href = backup;
+          link.textContent = 'GitHub 备用下载';
+          download.parentElement.appendChild(link);
+        }
+      } catch (_) { /* Preserve the verified static download when unavailable. */ }
     })();
   </script>
   <script id="guantuiguang-release-manifest">
