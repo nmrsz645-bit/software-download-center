@@ -1,10 +1,10 @@
 {
   "productId": "laxin-huohua",
-  "version": "1.0.0.2",
-  "url": "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/laxin-huohua/releases/1.0.0.2/laxin-huohua-1.0.0.2-app.zip",
-  "sha256": "366c1b118d3346c7a9ce8ae657dc0cc999fdac5bdd32fd71952eb43dfd3eea4d",
-  "fullPackageUrl": "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/laxin-huohua/releases/1.0.0.2/laxin-huohua-1.0.0.2-windows-x64.zip",
-  "fullPackageSha256": "43d09c56f3e76197122ebf101ac71db9d1c2ead892c7a8142e7468a5fed04c9b",
-  "notes": "补读微博视频卡片标题，已下载的待处理任务可继续运行，并修复打开网盘登录时整页变灰。",
-  "backupFullPackageUrl": "https://github.com/nmrsz645-bit/software-download-center/releases/download/laxin-huohua-v1.0.0.2/laxin-huohua-1.0.0.2-windows-x64.zip"
+  "version": "1.0.0.3",
+  "url": "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/laxin-huohua/releases/1.0.0.3/laxin-huohua-1.0.0.3-app.zip",
+  "sha256": "af8b5457def9694aa13a9b0582fbbafd3aea014b83b14a7b96998015f46855ef",
+  "fullPackageUrl": "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/laxin-huohua/releases/1.0.0.3/laxin-huohua-1.0.0.3-windows-x64.zip",
+  "fullPackageSha256": "4de4e0cae339bcb4b902c0a1b22e33f5b09911e0e16b58f06f9a41a3d6909591",
+  "notes": "支持逐条重试和复用已下载的视频。没有原作者网盘评论时，使用迅雷「骆驼分享」的固定链接和提取码。",
+  "backupFullPackageUrl": "https://github.com/nmrsz645-bit/software-download-center/releases/download/laxin-huohua-v1.0.0.3/laxin-huohua-1.0.0.3-windows-x64.zip"
 }
