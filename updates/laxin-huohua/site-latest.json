@@ -1,10 +1,10 @@
 {
   "productId": "laxin-huohua",
-  "version": "1.0.0.1",
-  "url": "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/laxin-huohua/releases/1.0.0.1/laxin-huohua-1.0.0.1-app.zip",
-  "sha256": "da3a50d05602368dc28d09d0859abe1e1845cf7dfd6090402854e43d2197e774",
-  "fullPackageUrl": "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/laxin-huohua/releases/1.0.0.1/laxin-huohua-1.0.0.1-windows-x64.zip",
-  "fullPackageSha256": "8481ab7780710b08eab03e221f13a7bc6f20ca8c146bec1609b7dbb7ead7c531",
-  "notes": "新增迅雷、UC 和夸克空间不足时的旧文件自动清理。默认关闭，可在微博视频监控中开启。",
-  "backupFullPackageUrl": "https://github.com/nmrsz645-bit/software-download-center/releases/download/laxin-huohua-v1.0.0.1/laxin-huohua-1.0.0.1-windows-x64.zip"
+  "version": "1.0.0.2",
+  "url": "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/laxin-huohua/releases/1.0.0.2/laxin-huohua-1.0.0.2-app.zip",
+  "sha256": "366c1b118d3346c7a9ce8ae657dc0cc999fdac5bdd32fd71952eb43dfd3eea4d",
+  "fullPackageUrl": "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/laxin-huohua/releases/1.0.0.2/laxin-huohua-1.0.0.2-windows-x64.zip",
+  "fullPackageSha256": "43d09c56f3e76197122ebf101ac71db9d1c2ead892c7a8142e7468a5fed04c9b",
+  "notes": "补读微博视频卡片标题，已下载的待处理任务可继续运行，并修复打开网盘登录时整页变灰。",
+  "backupFullPackageUrl": "https://github.com/nmrsz645-bit/software-download-center/releases/download/laxin-huohua-v1.0.0.2/laxin-huohua-1.0.0.2-windows-x64.zip"
 }
