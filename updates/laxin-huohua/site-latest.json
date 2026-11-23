@@ -1,10 +1,10 @@
 {
   "productId": "laxin-huohua",
-  "version": "1.0.0.5",
-  "url": "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/laxin-huohua/releases/1.0.0.5/laxin-huohua-1.0.0.5-app.zip",
-  "sha256": "d4fe933e2bf169d5447605af1d95733ba1ac9cfc6033b888e8aa7420f1da7bc1",
-  "fullPackageUrl": "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/laxin-huohua/releases/1.0.0.5/laxin-huohua-1.0.0.5-windows-x64.zip",
-  "fullPackageSha256": "02cc362dbdfed8f7b32eb00ecaae991d2b3cb23a2e77d4c2dbaf63bfe22fad52",
-  "notes": "修复微博长标题拦截，新增旧失败任务重试发布及已发布账号和作品查看。",
-  "backupFullPackageUrl": "https://github.com/nmrsz645-bit/software-download-center/releases/download/laxin-huohua-v1.0.0.5/laxin-huohua-1.0.0.5-windows-x64.zip"
+  "version": "1.0.0.6",
+  "url": "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/laxin-huohua/releases/1.0.0.6/laxin-huohua-1.0.0.6-app.zip",
+  "sha256": "4a307a2d093c24e173f98c3b4bdba4a67117ff5b01269504638c30cd78ebaf74",
+  "fullPackageUrl": "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/laxin-huohua/releases/1.0.0.6/laxin-huohua-1.0.0.6-windows-x64.zip",
+  "fullPackageSha256": "f80b0b2e5183dbce9d37207b6bf401a39fa6b3f7f14569cfafb64ca96ecd748d",
+  "notes": "修复微博原标题缺失及视频编号核对，改进发布回执识别。待核对记录支持重新核对原提交，避免重复发视频。",
+  "backupFullPackageUrl": "https://github.com/nmrsz645-bit/software-download-center/releases/download/laxin-huohua-v1.0.0.6/laxin-huohua-1.0.0.6-windows-x64.zip"
 }
