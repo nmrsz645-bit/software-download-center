@@ -1,10 +1,10 @@
 {
   "productId": "laxin-huohua",
-  "version": "1.0.0.3",
-  "url": "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/laxin-huohua/releases/1.0.0.3/laxin-huohua-1.0.0.3-app.zip",
-  "sha256": "af8b5457def9694aa13a9b0582fbbafd3aea014b83b14a7b96998015f46855ef",
-  "fullPackageUrl": "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/laxin-huohua/releases/1.0.0.3/laxin-huohua-1.0.0.3-windows-x64.zip",
-  "fullPackageSha256": "4de4e0cae339bcb4b902c0a1b22e33f5b09911e0e16b58f06f9a41a3d6909591",
-  "notes": "支持逐条重试和复用已下载的视频。没有原作者网盘评论时，使用迅雷「骆驼分享」的固定链接和提取码。",
-  "backupFullPackageUrl": "https://github.com/nmrsz645-bit/software-download-center/releases/download/laxin-huohua-v1.0.0.3/laxin-huohua-1.0.0.3-windows-x64.zip"
+  "version": "1.0.0.4",
+  "url": "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/laxin-huohua/releases/1.0.0.4/laxin-huohua-1.0.0.4-app.zip",
+  "sha256": "c59c414b66482ea9cb5ffbf72e36b46cb46e78f689a4b95675b8243e93013b2e",
+  "fullPackageUrl": "https://luotuoqiluotuozhaoma-download.oss-cn-beijing.aliyuncs.com/updates/laxin-huohua/releases/1.0.0.4/laxin-huohua-1.0.0.4-windows-x64.zip",
+  "fullPackageSha256": "1b582e33b4ffd48937ea08c0280116a1537fedb4f462e2ea694ffdf35682bdb6",
+  "notes": "优先查找原生 1080p，支持重试画质不足的旧任务。开启画质选项后可按原站最高画质发布并保留实际分辨率。",
+  "backupFullPackageUrl": "https://github.com/nmrsz645-bit/software-download-center/releases/download/laxin-huohua-v1.0.0.4/laxin-huohua-1.0.0.4-windows-x64.zip"
 }
