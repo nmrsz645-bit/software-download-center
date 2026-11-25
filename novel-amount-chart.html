@@ -48,7 +48,7 @@
       <div id="monthly-panel" class="panel" hidden>
         <h2>月度合计金额</h2>
         <div id="months" class="month-grid"></div>
-        <p class="month-note">按自然月累加每天最后一次四平台均成功的合计。缺少完整合计的日期不会按 0 元计算；本月统计截至链接生成当天。</p>
+        <p id="month-note" class="month-note"></p>
       </div>
       <div class="panel">
         <div id="legend" class="legend" aria-label="选择曲线"></div>
@@ -58,16 +58,16 @@
       </div>
       <div class="panel">
         <h2>每日明细</h2>
-        <div id="table-wrap"><table><thead><tr><th>日期</th><th>点重艺影画境</th><th>点重欣娱</th><th>七猫平台</th><th>边锋平台</th><th>合计金额</th></tr></thead><tbody id="rows"></tbody></table></div>
+        <div id="table-wrap"><table><thead><tr id="columns"><th scope="col">日期</th></tr></thead><tbody id="rows"></tbody></table></div>
       </div>
-      <footer>各平台取当天最后一次成功抓取；合计取当天最后一次四项均成功的记录。合计与各平台数值的取样时间可能不同。未抓取或抓取失败的日期显示“—”，不会按零计算。金额数据仅位于本链接的 # 后，网页服务器不接收这段数据；持有链接者可查看。</footer>
+      <footer>各平台取当天最后一次成功抓取。合计取当天最后一次<span id="total-scope"></span>项均成功的记录。合计与各平台数值的取样时间可能不同。缺少记录的日期显示“—”。金额数据仅位于本链接的 # 后，网页服务器不接收这段数据。持有链接者可查看。</footer>
     </section>
   </main>
   <script>
     (() => {
       "use strict";
-      const labels = ["点重艺影画境", "点重欣娱", "七猫平台", "边锋平台", "合计金额"];
-      const colors = ["#ea6b45", "#ac62cb", "#2585ba", "#2d9d79", "#17496c"];
+      const platformLabels = ["点重艺影画境", "点重欣娱", "七猫平台", "边锋平台"];
+      const platformColors = ["#ea6b45", "#ac62cb", "#2585ba", "#2d9d79"];
       const svgNS = "http://www.w3.org/2000/svg";
       const byId = id => document.getElementById(id);
       const addSvg = (tag, attributes, parent) => {
@@ -83,14 +83,18 @@
       }
       function readPayload() {
         const fragment = location.hash.slice(1);
-        if (!fragment.startsWith("v1=") || fragment.length > 10000) throw new Error("链接缺少有效的曲线数据。");
+        if (!/^v[12]=/.test(fragment) || fragment.length > 10000) throw new Error("链接缺少有效的曲线数据。");
+        const version = Number(fragment[1]);
         const encoded = fragment.slice(3);
         if (!/^[A-Za-z0-9_-]+$/.test(encoded)) throw new Error("曲线数据格式无效。");
         const bytes = Uint8Array.from(atob(encoded.replace(/-/g, "+").replace(/_/g, "/") + "===".slice((encoded.length + 3) % 4)), c => c.charCodeAt(0));
         const data = JSON.parse(new TextDecoder().decode(bytes));
-        if (data.v !== 1 || !/^\d{4}-\d{2}-\d{2}$/.test(data.end) || !Array.isArray(data.rows) || data.rows.length !== 30 || typeof data.unit !== "string" || data.unit.length > 12) throw new Error("曲线数据格式无效。");
+        if (data.v !== version || !/^\d{4}-\d{2}-\d{2}$/.test(data.end) || !Array.isArray(data.rows) || data.rows.length !== 30 || typeof data.unit !== "string" || data.unit.length > 12) throw new Error("曲线数据格式无效。");
+        const isAmount = version === 1
+          ? value => typeof value === "string" && /^\d+(?:\.\d{1,2})?$/.test(value)
+          : value => Number.isSafeInteger(value) && value >= 0;
         for (const row of data.rows) {
-          if (!Array.isArray(row) || row.length !== 5 || row.some(value => value !== null && (typeof value !== "string" || !/^\d+(?:\.\d{1,2})?$/.test(value)))) throw new Error("曲线数据格式无效。");
+          if (!Array.isArray(row) || row.length !== version + 4 || row.some(value => value !== null && !isAmount(value))) throw new Error("曲线数据格式无效。");
         }
         if (data.months !== undefined) {
           if (!Array.isArray(data.months) || data.months.length > 3 || data.months.some(month =>
@@ -98,6 +102,13 @@
             (month[1] !== null && (typeof month[1] !== "string" || !/^\d+(?:\.\d{1,2})?$/.test(month[1]))) ||
             !Number.isInteger(month[2]) || !Number.isInteger(month[3]) || month[2] < 0 || month[3] < 1 || month[3] > 31 || month[2] > month[3] ||
             (month[1] === null) !== (month[2] === 0))) throw new Error("月度数据格式无效。");
+        }
+        if (version === 2) {
+          data.rows = data.rows.map(row => row.map(cents => {
+            if (cents === null) return null;
+            const digits = String(cents).padStart(3, "0");
+            return digits.slice(0, -2) + "." + digits.slice(-2);
+          }));
         }
         return data;
       }
@@ -107,13 +118,29 @@
         day.setUTCDate(day.getUTCDate() - 29 + index);
         return day.toISOString().slice(0, 10);
       }
+      function formatAmount(value, unit) {
+        const [whole, fraction = ""] = value.split(".");
+        return whole.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "." + fraction.padEnd(2, "0") + " " + unit;
+      }
       function show(data) {
         const dates = data.rows.map((_, i) => dateAt(data.end, i));
         const unit = data.unit || "元";
+        const withZhihu = data.v === 2;
+        const labels = [...platformLabels];
+        const colors = [...platformColors];
+        if (withZhihu) {
+          labels.push("知乎平台");
+          colors.push("#b4512d");
+        }
+        labels.push("合计金额");
+        colors.push("#17496c");
+        const scope = withZhihu ? "五" : "四";
+        byId("total-scope").textContent = scope;
         byId("range").textContent = `${dates[0]} 至 ${dates[29]} · 北京时间 · 每日最后一次成功金额`;
         byId("content").hidden = false;
         if (data.months && data.months.length) {
           byId("monthly-panel").hidden = false;
+          byId("month-note").textContent = `按自然月累加每天最后一次${scope}项均成功的合计。缺少完整合计的日期不计入月度金额。本月统计截至链接生成当天。`;
           const monthGrid = byId("months");
           for (const [month, amount, counted, expected] of [...data.months].reverse()) {
             const card = document.createElement("div");
@@ -121,12 +148,19 @@
             const title = document.createElement("div");
             title.textContent = `${month.slice(0, 4)}年${Number(month.slice(5))}月${month === data.end.slice(0, 7) ? " · 本月截至" + data.end.slice(5) : ""}`;
             const value = document.createElement("strong");
-            value.textContent = amount === null ? "暂无完整日期数据" : `${Number(amount).toLocaleString("zh-CN", {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${unit}`;
+            value.textContent = amount === null ? "暂无完整日期数据" : formatAmount(amount, unit);
             const status = document.createElement("small");
             status.textContent = `已统计 ${counted}/${expected} 天${expected > counted ? " · 缺少 " + (expected - counted) + " 天" : " · 无缺失"}`;
             card.append(title, value, status);
             monthGrid.appendChild(card);
           }
+        }
+        const columns = byId("columns");
+        for (const label of labels) {
+          const th = document.createElement("th");
+          th.scope = "col";
+          th.textContent = label;
+          columns.appendChild(th);
         }
         const table = byId("rows");
         for (let index = 29; index >= 0; index--) {
@@ -136,13 +170,13 @@
           tr.appendChild(dateCell);
           for (const value of data.rows[index]) {
             const td = document.createElement("td");
-            td.textContent = value === null ? "—" : `${Number(value).toLocaleString("zh-CN", {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${unit}`;
+            td.textContent = value === null ? "—" : formatAmount(value, unit);
             if (value === null) td.className = "empty";
             tr.appendChild(td);
           }
           table.appendChild(tr);
         }
-        let selected = 4;
+        let selected = labels.length - 1;
         const legend = byId("legend");
         const buttons = labels.map((label, index) => {
           const button = document.createElement("button");
@@ -183,8 +217,9 @@
           values.forEach((value, index) => {
             if (value === null) return;
             const x = left + index * 68, y = bottom - (value / max) * (bottom - top);
-            const dot = addSvg("circle", {cx: x, cy: y, r: 7, fill: colors[selected], stroke: "white", "stroke-width": 2, tabindex: 0, role: "button", "aria-label": `${dates[index]} ${labels[selected]} ${value.toFixed(2)} ${unit}`}, svg);
-            const select = () => { byId("selected").textContent = `${dates[index]} · ${labels[selected]}：${value.toLocaleString("zh-CN", {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${unit}`; };
+            const amount = formatAmount(data.rows[index][selected], unit);
+            const dot = addSvg("circle", {cx: x, cy: y, r: 7, fill: colors[selected], stroke: "white", "stroke-width": 2, tabindex: 0, role: "button", "aria-label": `${dates[index]} ${labels[selected]} ${amount}`}, svg);
+            const select = () => { byId("selected").textContent = `${dates[index]} · ${labels[selected]}：${amount}`; };
             dot.addEventListener("click", select);
             dot.addEventListener("keydown", event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); select(); } });
           });
